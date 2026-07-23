@@ -5,8 +5,31 @@ import type { StorageAdapter } from "grammy";
 // The per-chat session shape (ephemeral conversation state only). Extend as the
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
+export type FlowStep =
+  | "idle"
+  | "awaiting_coin"
+  | "awaiting_display_name"
+  | "awaiting_threshold_price"
+  | "awaiting_percent_value"
+  | "awaiting_quiet_start"
+  | "awaiting_quiet_end"
+  | "awaiting_summary_time"
+  | "awaiting_price_feed_url";
+
 export interface Session {
-  // example: step?: "awaiting_amount";
+  step?: FlowStep;
+  /** Draft ticker while adding a coin. */
+  draft_ticker?: string;
+  /** Draft coingecko id while adding a coin. */
+  draft_coingecko_id?: string;
+  /** Alert creation drafts. */
+  draft_alert_ticker?: string;
+  draft_alert_type?: "threshold" | "percent";
+  draft_alert_direction?: "above" | "below";
+  /** Quiet hours draft start (HH:mm). */
+  draft_quiet_start?: string;
+  /** Flow expiry (epoch ms). */
+  flow_expires_at?: number;
 }
 
 export type Ctx = BotContext<Session>;

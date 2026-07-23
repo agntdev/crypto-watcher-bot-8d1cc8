@@ -1,24 +1,44 @@
 import { Composer } from "grammy";
 import type { Ctx } from "../bot.js";
-import { mainMenuKeyboard } from "../toolkit/index.js";
+import {
+  inlineButton,
+  inlineKeyboard,
+  mainMenuKeyboard,
+} from "../toolkit/index.js";
+import { POPULAR_COINS } from "../lib/coins.js";
+import { ensureUser } from "../lib/users.js";
+import { COPY } from "../lib/ui.js";
 
-// The /start handler renders the bot's MAIN MENU — the primary way users operate
-// a button-first bot. A feature adds its own button by calling
-// `registerMainMenuItem(...)` in its own `src/handlers/<slug>.ts`; this handler
-// renders whatever is registered (plus a Help button), so you do NOT edit this
-// file to add a feature. Send ONE message — no placeholder line above the menu.
+// /start — welcome + popular coins + main menu. Features register their own
+// main-menu buttons via registerMainMenuItem in their handler modules.
 const composer = new Composer<Ctx>();
 
-const WELCOME = "👋 Welcome! Tap a button below to get started.";
+function welcomeKeyboard() {
+  const popular = POPULAR_COINS.map((c) =>
+    inlineButton(c.ticker, `add_coin:pick:${c.ticker}`),
+  );
+  const menu = mainMenuKeyboard();
+  // Popular row on top, then registered menu rows.
+  return inlineKeyboard([[...popular], ...menu.inline_keyboard]);
+}
 
 composer.command("start", async (ctx) => {
-  await ctx.reply(WELCOME, { reply_markup: mainMenuKeyboard() });
+  if (ctx.from?.id) await ensureUser(ctx.from.id);
+  ctx.session.step = "awaiting_coin";
+  ctx.session.flow_expires_at = undefined;
+  await ctx.reply(COPY.welcome, { reply_markup: welcomeKeyboard() });
 });
 
-// "Back to menu" — re-render the main menu in place from any sub-view.
+// "Back to menu" — re-render welcome + menu in place.
 composer.callbackQuery("menu:main", async (ctx) => {
   await ctx.answerCallbackQuery();
-  await ctx.editMessageText(WELCOME, { reply_markup: mainMenuKeyboard() });
+  if (ctx.from?.id) await ensureUser(ctx.from.id);
+  ctx.session.step = "idle";
+  try {
+    await ctx.editMessageText(COPY.welcome, { reply_markup: welcomeKeyboard() });
+  } catch {
+    await ctx.reply(COPY.welcome, { reply_markup: welcomeKeyboard() });
+  }
 });
 
 export default composer;

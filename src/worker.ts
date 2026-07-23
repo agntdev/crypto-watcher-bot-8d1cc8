@@ -14,6 +14,7 @@ import { webhookCallback, Composer, type Bot } from "grammy";
 import { buildBot, type Ctx } from "./bot.js";
 import { handlers } from "./handlers.generated.js";
 import { createDurableSessionStorage, type WorkerEnv } from "./toolkit/session/durable.js";
+import { runSchedulerTick } from "./lib/scheduler.js";
 
 export { ChatDO } from "./toolkit/session/durable.js";
 
@@ -80,5 +81,15 @@ export default {
     }
 
     return new Response("not found", { status: 404 });
+  },
+
+  /** Cron trigger — alert pass, quiet-hour flush, morning summaries. */
+  async scheduled(
+    _event: unknown,
+    env: WorkerEnv,
+    ctx: { waitUntil(p: Promise<unknown>): void },
+  ): Promise<void> {
+    const bot = await getBot(env);
+    ctx.waitUntil(runSchedulerTick(bot));
   },
 };

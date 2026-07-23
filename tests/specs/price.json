@@ -1,19 +1,49 @@
 [
   {
-    "name": "/price",
+    "name": "/price empty watchlist",
     "steps": [
       {
+        "send": { "text": "/price" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Check current price of a specific coin or full watchlist"
+              "text": "Your watchlist is empty — tap Add Coin to add BTC, ETH, or TON.\n\nOr try /price BTC for a one-off check."
             }
           }
-        ],
-        "send": {
-          "text": "/price"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/price unknown ticker shape",
+    "steps": [
+      {
+        "send": { "text": "/price !!" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Couldn't find \"!!\". Try BTC, ETH, TON."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Prices menu button empty watchlist",
+    "steps": [
+      {
+        "send": { "callback": "price:check" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Your watchlist is empty — tap Add Coin to add BTC, ETH, or TON.\n\nOr try /price BTC for a one-off check."
+            }
+          }
+        ]
       }
     ]
   }

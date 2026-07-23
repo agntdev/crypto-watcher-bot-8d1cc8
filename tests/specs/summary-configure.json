@@ -1,19 +1,84 @@
 [
   {
-    "name": "Morning Summary",
+    "name": "Morning Summary default off",
     "steps": [
       {
+        "send": { "callback": "summary:configure" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Morning summary is off (opt-in).\n\nWhen enabled, you'll get a daily digest of your watchlist at the local time you choose."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Morning Summary enable",
+    "steps": [
+      {
+        "send": { "callback": "summary:configure" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "callback": "summary:enable" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Morning summary is on at 08:00 (UTC).\n\nYou'll get a daily digest of your watchlist prices. Not financial advice."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Morning Summary set custom time",
+    "steps": [
+      {
+        "send": { "callback": "summary:set_time" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Send the local time for your morning summary as HH:mm (e.g. 08:00)."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "07:15" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Configure morning summary preferences"
+              "text": "Morning summary set for 07:15 (your selected timezone). You're opted in."
             }
           }
-        ],
-        "send": {
-          "callback": "summary:configure"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Morning Summary disable",
+    "steps": [
+      {
+        "send": { "callback": "summary:enable" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "callback": "summary:disable" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Morning summary is off (opt-in).\n\nWhen enabled, you'll get a daily digest of your watchlist at the local time you choose."
+            }
+          }
+        ]
       }
     ]
   }
