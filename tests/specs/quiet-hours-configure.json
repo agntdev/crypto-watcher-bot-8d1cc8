@@ -1,19 +1,91 @@
 [
   {
-    "name": "Set Quiet Hours",
+    "name": "Set Quiet Hours shows defaults",
     "steps": [
       {
+        "send": { "callback": "quiet_hours:configure" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Quiet hours are on: 22:00–07:00 (your local time).\n\nAlerts that fire during quiet hours are queued and sent when quiet hours end — only if the condition still holds.\n\nTap a preset, turn them off, or set custom times."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "quiet hours preset saves",
+    "steps": [
+      {
+        "send": { "callback": "quiet_hours:configure" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "callback": "quiet_hours:preset:23:00:08:00" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Quiet hours saved: 23:00–08:00. Alerts will pause in that window."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "quiet hours custom times",
+    "steps": [
+      {
+        "send": { "callback": "quiet_hours:custom" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Custom quiet hours.\n\nSend the start time as HH:mm (e.g. 22:00)."
+            }
+          }
+        ]
+      },
+      {
+        "send": { "text": "21:30" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Configure quiet hours for alert suppression"
+              "text": "Start saved. Send the end time as HH:mm (e.g. 07:00)."
             }
           }
-        ],
-        "send": {
-          "callback": "quiet_hours:configure"
-        }
+        ]
+      },
+      {
+        "send": { "text": "06:30" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Quiet hours saved: 21:30–06:30. Alerts will pause in that window."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "quiet hours turn off",
+    "steps": [
+      {
+        "send": { "callback": "quiet_hours:disable" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Quiet hours are off: 22:00–07:00 (your local time).\n\nAlerts that fire during quiet hours are queued and sent when quiet hours end — only if the condition still holds.\n\nTap a preset, turn them off, or set custom times."
+            }
+          }
+        ]
       }
     ]
   }

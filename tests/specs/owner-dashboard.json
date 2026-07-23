@@ -1,19 +1,37 @@
 [
   {
-    "name": "Owner Dashboard",
+    "name": "Owner Dashboard shows stats",
     "steps": [
       {
+        "send": { "callback": "owner:dashboard" },
         "expect": [
           {
-            "method": "sendMessage",
+            "method": "editMessageText",
             "payload": {
-              "text": "View usage statistics and top alerts"
+              "text": "Owner dashboard\n\nTotal users: 0\n\nTop alerts:\nNo alerts recorded yet.\n\nPrice feed:\n• Base: https://api.coingecko.com/api/v3\n• VS: USD\n• Retries: 3\n\nSystem: scheduler runs alerts, quiet-hour flush, and morning summaries each minute."
             }
           }
-        ],
-        "send": {
-          "callback": "owner:dashboard"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Owner Dashboard counts a user after /start",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "owner:dashboard" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Owner dashboard\n\nTotal users: 1\n\nTop alerts:\nNo alerts recorded yet.\n\nPrice feed:\n• Base: https://api.coingecko.com/api/v3\n• VS: USD\n• Retries: 3\n\nSystem: scheduler runs alerts, quiet-hour flush, and morning summaries each minute."
+            }
+          }
+        ]
       }
     ]
   }

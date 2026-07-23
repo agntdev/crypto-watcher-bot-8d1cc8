@@ -1,19 +1,77 @@
 [
   {
-    "name": "Add Coin",
+    "name": "Add Coin starts the flow",
     "steps": [
       {
+        "send": { "callback": "add_coin:start" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Add a coin to your watchlist.\n\nTap BTC, ETH, or TON — or type a ticker (e.g. SOL)."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Add Coin pick ETH",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "callback": "add_coin:pick:ETH" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Start the flow to add a new coin to the watchlist"
+              "text": "Added Ethereum (ETH) to your watchlist.\n\n• Ethereum (ETH)"
             }
           }
-        ],
-        "send": {
-          "callback": "add_coin:start"
-        }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Add Coin free-text known ticker",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "text": "SOL" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Added Solana (SOL) to your watchlist.\n\n• Solana (SOL)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "unknown ticker shape is rejected",
+    "steps": [
+      {
+        "send": { "callback": "add_coin:start" },
+        "expect": [{ "method": "editMessageText" }]
+      },
+      {
+        "send": { "text": "!" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "That doesn't look like a ticker. Try BTC, ETH, TON, or type Cancel."
+            }
+          }
+        ]
       }
     ]
   }

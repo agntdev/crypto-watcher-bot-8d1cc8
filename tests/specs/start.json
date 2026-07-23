@@ -7,7 +7,45 @@
         "expect": [
           {
             "method": "sendMessage",
-            "payload": { "text": "👋 Welcome! Tap a button below to get started." }
+            "payload": {
+              "text": "Crypto Watcher tracks the coins you care about and alerts you on price moves.\n\nPick a popular coin below, or type a ticker (e.g. SOL). Not financial advice."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "/start popular coin button adds BTC",
+    "steps": [
+      {
+        "send": { "text": "/start" },
+        "expect": [{ "method": "sendMessage" }]
+      },
+      {
+        "send": { "callback": "add_coin:pick:BTC" },
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Added Bitcoin (BTC) to your watchlist.\n\n• Bitcoin (BTC)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "menu:main re-renders welcome",
+    "steps": [
+      {
+        "send": { "callback": "menu:main" },
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Crypto Watcher tracks the coins you care about and alerts you on price moves.\n\nPick a popular coin below, or type a ticker (e.g. SOL). Not financial advice."
+            }
           }
         ]
       }

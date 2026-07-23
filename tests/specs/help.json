@@ -8,7 +8,7 @@
           {
             "method": "sendMessage",
             "payload": {
-              "text": "ℹ️ Tap /start to open the menu, then pick what you want from the buttons.\n\nEverything in this bot is reachable by tapping — you don't need to remember any commands."
+              "text": "Crypto Watcher — personal watchlists and price alerts.\n\n• Add Coin — put a ticker on your watchlist\n• Manage Alerts — threshold or percent-move rules\n• Set Quiet Hours — pause alerts overnight\n• Morning Summary — opt-in daily digest\n• /price BTC — live price, or /price for your whole list\n\nTap /start for the menu. Not financial advice."
             }
           }
         ]
@@ -20,7 +20,14 @@
     "steps": [
       {
         "send": { "callback": "menu:help" },
-        "expect": [{ "method": "editMessageText" }]
+        "expect": [
+          {
+            "method": "editMessageText",
+            "payload": {
+              "text": "Crypto Watcher — personal watchlists and price alerts.\n\n• Add Coin — put a ticker on your watchlist\n• Manage Alerts — threshold or percent-move rules\n• Set Quiet Hours — pause alerts overnight\n• Morning Summary — opt-in daily digest\n• /price BTC — live price, or /price for your whole list\n\nTap /start for the menu. Not financial advice."
+            }
+          }
+        ]
       }
     ]
   }
