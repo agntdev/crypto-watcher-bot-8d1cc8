@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Add Coin",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Start the flow to add a new coin to the watchlist"
+            }
+          }
+        ],
+        "send": {
+          "callback": "add_coin:start"
+        }
+      }
+    ]
+  }
+]
